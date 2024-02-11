@@ -1,0 +1,24 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+class BackendApi {
+  // final _serverurl = "http://192.168.29.180:8000/";
+  final _serverurl = "https://congenial-adventure-v7ww59w77r4fpvwg-8000.app.github.dev/";
+  // final _serverurl =
+  //     "https://upgraded-yodel-9g4qq9grp9pf747q-8000.app.github.dev/";
+  final _getBustApi = "api/busdetails/";
+
+  var client = http.Client();
+
+  Future<List<Map<String, dynamic>>> getBuses() async {
+    var url = Uri.parse(_serverurl + _getBustApi);
+    var response = await http.get(url);
+    print(response.body);
+    // var data = jsonDecode(response.body) as List<Map<String, dynamic>>;
+    var data = (jsonDecode(response.body) as List)
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+    return data;
+  }
+}
