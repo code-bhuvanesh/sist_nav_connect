@@ -6,6 +6,7 @@ import 'package:sist_nav_connect/features/map_view/map_view.dart';
 import 'package:sist_nav_connect/utils/constants.dart';
 
 import '../../animations/mapAnimations.dart';
+import '../../data/model/bus.dart';
 import '../../utils/helpers.dart';
 import 'bloc/mapbloc_bloc.dart';
 import '../mainbloc/main_bloc.dart';
@@ -13,7 +14,11 @@ import 'mapBottomSheet.dart';
 
 class MapViewPage extends StatefulWidget {
   static const routename = '/mapview';
-  const MapViewPage({super.key});
+  final Bus bus;
+  const MapViewPage({
+    super.key,
+    required this.bus,
+  });
 
   @override
   State<MapViewPage> createState() => _MapViewPageState();
@@ -33,7 +38,9 @@ class _MapViewPageState extends State<MapViewPage>
   void initState() {
     // context.read<MapBloc>().add(GetMapPolylinePoints(points: cordinates));
     context.read<MainBloc>().add(GetCurrentLocation());
-    context.read<MapBloc>().add(ListenBusLocationEvent(busId: 4));
+    context.read<MapBloc>().add(ListenBusLocationEvent(
+          busId: widget.bus.busid,
+        ));
     super.initState();
   }
 
@@ -93,7 +100,7 @@ class _MapViewPageState extends State<MapViewPage>
                 closestPoint = generatedPoints.removeLast();
                 generatedPoints = findClosestLatLng(
                   generatedPoints,
-                  currentBusLocation!,
+                  currentBusLocation!, 
                   onlyhalf: true,
                 );
 
@@ -156,8 +163,42 @@ class _MapViewPageState extends State<MapViewPage>
                 if (currentBusLocation != null)
                   Marker(
                     point: currentBusLocation!,
-                    child: const Icon(
-                      Icons.bus_alert_rounded,
+                    // child: const Icon(
+                    //   Icons.bus_alert_rounded,
+                    // ),
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      padding: const EdgeInsets.all(0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        "assets/icons/bus_logo.png",
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                if (polyline.isNotEmpty)
+                  Marker(
+                    point: polyline[polyline.length - 1],
+                    // child: const Icon(
+                    //   Icons.bus_alert_rounded,
+                    // ),
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        
+                        "assets/icons/sist_logo.png",
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 // ...testNumber(mapCordinates),
@@ -167,7 +208,7 @@ class _MapViewPageState extends State<MapViewPage>
                     point: closestPoint!,
                     child: const Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: Color.fromARGB(126, 255, 255, 255),
                     ),
                   ),
                 ...markersLatLng
@@ -183,11 +224,9 @@ class _MapViewPageState extends State<MapViewPage>
                 Polyline(
                   points: polyline,
                   // points: cordinates.map((e) => LatLng(e[1], e[0])).toList(),
-                  color: Colors.blue,
-                  strokeWidth: 10,
+                  color: Colors.black,
+                  strokeWidth: 5,
                   strokeCap: StrokeCap.round,
-                  borderColor: Colors.black,
-                  borderStrokeWidth: 2,
                   // borderStrokeWidth: 10,
                 ),
               ],
@@ -198,8 +237,12 @@ class _MapViewPageState extends State<MapViewPage>
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 if (currentBusLocation != null)
                   navButton(
-                    icon: const Icon(
-                      Icons.bus_alert,
+                    // icon: const Icon(
+                    //   Icons.bus_alert,
+                    // ),
+                    icon: Image.asset(
+                      "assets/icons/bus_logo.png",
+                      fit: BoxFit.contain,
                     ),
                     onTap: () {
                       if (currentBusLocation != null) {
@@ -216,8 +259,12 @@ class _MapViewPageState extends State<MapViewPage>
                   height: 20,
                 ),
                 navButton(
-                  icon: const Icon(
-                    Icons.gps_fixed,
+                  // icon: const Icon(
+                  //   Icons.gps_fixed,
+                  // ),
+                  icon: Image.asset(
+                    "assets/icons/location_logo.png",
+                    fit: BoxFit.contain,
                   ),
                   onTap: () {
                     animatedMapMove(
@@ -246,11 +293,15 @@ class _MapViewPageState extends State<MapViewPage>
   Widget navButton({required Widget icon, required void Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: Card(
-        color: const Color.fromARGB(255, 221, 240, 255),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: icon,
+      child: SizedBox(
+        height: 60,
+        width: 60,
+        child: Card(
+          color: const Color.fromARGB(255, 221, 240, 255),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: icon,
+          ),
         ),
       ),
     );

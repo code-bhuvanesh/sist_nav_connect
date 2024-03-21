@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'route.dart';
 
 class Bus {
+  final int busid;
   final int busNo;
   final int driverID;
   final String driverName;
@@ -13,6 +14,7 @@ class Bus {
   final List<Route> routes;
 
   Bus({
+    required this.busid,
     required this.busNo,
     required this.driverID,
     required this.driverName,
@@ -22,6 +24,7 @@ class Bus {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'bus_id': busid,
       'bus_no': busNo,
       'driver_id': driverID,
       'driver_name': driverName,
@@ -33,6 +36,7 @@ class Bus {
 
   factory Bus.fromMap(Map<String, dynamic> map) {
     return Bus(
+      busid: map['bus_id'] as int,
       busNo: map['bus_no'] as int,
       driverID: map['driver_id'] as int,
       driverName: map['driver_name'] as String,

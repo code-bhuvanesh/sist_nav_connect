@@ -4,6 +4,7 @@ import 'package:sist_nav_connect/data/model/bus.dart';
 import 'package:sist_nav_connect/features/homepage/bloc/bus_bloc.dart';
 import 'package:sist_nav_connect/features/set_locaiton_page/set_location_page.dart';
 import 'package:sist_nav_connect/features/share_location/share_location.dart';
+import 'package:sist_nav_connect/utils/helpers.dart';
 
 import '../../utils/storage_acess.dart';
 import '../map_view_page/mapviewpage.dart';
@@ -118,6 +119,22 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            size: 30,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(width: 1),
+                          ),
+                          hintText: "Search Destination",
+                        ),
+                      ),
+                    ),
                     if (buses.isNotEmpty)
                       Expanded(
                         child: ListView.builder(
@@ -152,10 +169,13 @@ class _HomePageState extends State<HomePage> {
     for (var p in places) {
       viaPlacesText += "$p>";
     }
+    var randHr = nextRandomInt(7, 9);
+    var randMin = nextRandomInt(0, 59);
+    var randMinText = randMin > 9 ? randMin.toString() : "0$randMin";
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(MapViewPage.routename);
+        Navigator.of(context).pushNamed(MapViewPage.routename, arguments: bus);
       },
       child: Card(
         color: const Color.fromARGB(255, 245, 248, 255),
@@ -182,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                     bus.busNo.toString(),
                     style: const TextStyle(
                       fontSize: 30,
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                 ),
@@ -224,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const Text("arival time : 9:40 AM"),
+                      Text("arival time : $randHr:$randMinText AM"),
                     ],
                   ),
                 ),

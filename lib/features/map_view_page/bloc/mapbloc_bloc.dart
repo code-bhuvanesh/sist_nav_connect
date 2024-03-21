@@ -32,7 +32,8 @@ class MapBloc extends Bloc<MapblocEvent, MapblocState> {
     ListenBusLocationEvent event,
     Emitter<MapblocState> emit,
   ) async {
-    var locationSocket = LocationSocket(event.busId);
+    var locationSocket = LocationSocket();
+    await locationSocket.start();
     late StreamSubscription<dynamic> locStreamSubscription;
     locStreamSubscription = locationSocket.ws.stream.listen((event) {
       var data = jsonDecode(event) as Map<String, dynamic>;

@@ -37,7 +37,8 @@ class SharelocationBloc extends Bloc<SharelocationEvent, SharelocationState> {
     ListenBusLocationEvent event,
     Emitter<SharelocationState> emit,
   ) async {
-    var locationSocket = LocationSocket(event.busId);
+    var locationSocket = LocationSocket();
+    await locationSocket.start();
     locationSocket.ws.stream.listen((event) {
       var data = jsonDecode(event) as Map<String, dynamic>;
       // print(
@@ -84,7 +85,8 @@ class SharelocationBloc extends Bloc<SharelocationEvent, SharelocationState> {
     print("current location : $currentLocation");
     try {
       var loc = LatLng(currentLocation.latitude!, currentLocation.longitude!);
-      var locationSocket = LocationSocket(event.busID);
+      var locationSocket = LocationSocket();
+      await locationSocket.start();
       var locData = {"lat": loc.latitude, "lang": loc.longitude};
       locationSocket.sendMsg(jsonEncode(locData));
       // add(LocationState(location: loc));

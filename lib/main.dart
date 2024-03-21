@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:sist_nav_connect/data/model/bus.dart';
 
 import 'features/set_locaiton_page/bloc/set_location_bloc.dart';
 import 'features/set_locaiton_page/set_location_page.dart';
@@ -12,6 +15,11 @@ import 'features/map_view_page/bloc/mapbloc_bloc.dart';
 import 'features/map_view_page/mapviewpage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(BlocProvider(
     create: (context) => MainBloc(),
     child: const MyApp(),
@@ -55,7 +63,7 @@ class MyApp extends StatelessWidget {
         return _pageTransition(
           child: BlocProvider(
             create: (context) => MapBloc(),
-            child: const MapViewPage(),
+            child: MapViewPage(bus: settings.arguments as Bus),
           ),
         );
       case ShareLocation.routename:
@@ -81,8 +89,24 @@ class MyApp extends StatelessWidget {
     ));
   }
 
+  Future<void> changeRefreshrate() async {
+    try {
+      var modes = await FlutterDisplayMode.supported;
+      print("display modes");
+      print(modes);
+      print("active dispaly mode");
+      print(await FlutterDisplayMode.active);
+      await FlutterDisplayMode.setPreferredMode(modes[1]);
+      print("new active dispaly mode");
+      print(await FlutterDisplayMode.active);
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    changeRefreshrate();
     return MaterialApp(
       title: 'sist nav connect',
       theme: ThemeData(

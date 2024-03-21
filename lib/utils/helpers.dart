@@ -187,3 +187,9 @@ String convertMetersTime(double meters) {
   var min = ((time - hr) * 60).toStringAsFixed(0);
   return "$hr Hr $min min";
 }
+
+
+
+final _random = math.Random();
+
+int nextRandomInt(int min, int max) => min + _random.nextInt(max - min);
