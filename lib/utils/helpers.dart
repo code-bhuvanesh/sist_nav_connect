@@ -97,10 +97,10 @@ List<LatLng> generateinBetweenPoints(
   List<LatLng> generatedPoints = [];
 
   // Calculate the distance between the two points
-  double totalDistance = getDistance(point1, point2);
+  // double totalDistance = getDistance(point1, point2);
 
   // Calculate the distance between each generated point
-  double intervalDistance = totalDistance / (numPoints + 1);
+  // double intervalDistance = totalDistance / (numPoints + 1);
 
   // Generate points
   for (int i = 1; i <= numPoints; i++) {

@@ -21,22 +21,25 @@ class LocationSocket {
     if (wsUrl == null || busid == null) {
       try {
         var result = await client.get(
-          Uri.parse(
-            "https://json.extendsclass.com/bin/dcda445ef811",
-          ),
-        );
+            Uri.parse("https://api.jsonbin.io/v3/b/6624a9ecad19ca34f85d9496"),
+            headers: {
+              "X-Master-Key":
+                  r"$2a$10$lP.Bl674yhOr.IWCNOoc6etqFJblV9c8Neu7qsKc8D88VmpmkrmZW"
+            });
+
+        ///for testing only remove it in production
         var msg = jsonDecode(result.body);
-        wsUrl = msg["socketUrl"];
-        busid = msg["busid"];
+        print("json api body : ${msg}");
+        wsUrl = msg["record"]["socketUrl"];
+        busid = msg["record"]["busid"];
       } on Exception {
         wsUrl =
-            "wss://congenial-adventure-v7ww59w77r4fpvwg-8000.app.github.dev/ws/buslocation/";
+            "wss://probable-chainsaw-94wwxrw4xqr2p46v-8000.app.github.dev/ws/buslocation/";
         busid = 2;
       }
-    } 
+    }
     print("wsurl from config file : $wsUrl");
     ws = WebSocketChannel.connect(Uri.parse("$wsUrl$busid"));
-    
   }
 
   void sendMsg(String msg) {

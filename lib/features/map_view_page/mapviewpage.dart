@@ -100,15 +100,15 @@ class _MapViewPageState extends State<MapViewPage>
                 closestPoint = generatedPoints.removeLast();
                 generatedPoints = findClosestLatLng(
                   generatedPoints,
-                  currentBusLocation!, 
+                  currentBusLocation!,
                   onlyhalf: true,
                 );
-
+                var busd = getDistanceFromList(polyline,
+                    end: closestPoint); // calculate bus distance
                 generatedPoints.removeLast();
                 setState(() {
                   polyline = generatedPoints;
-                  busDistance =
-                      getDistanceFromList(polyline, end: closestPoint);
+                  busDistance = busd;
                 });
                 print("my distance from bus $busDistance");
               }
@@ -141,10 +141,11 @@ class _MapViewPageState extends State<MapViewPage>
                         findClosestLatLng(generatedPoints, currentLocation!);
                     closestPoint = generatedPoints.removeLast();
                   }
+                  var busd = getDistanceFromList(polyline, end: closestPoint); //bus distance
                   setState(() {
                     polyline = generatedPoints;
-                    busDistance =
-                        getDistanceFromList(polyline, end: closestPoint);
+                    busDistance =busd;
+                        
                   });
                   print("my distance from bus $busDistance");
                 }
@@ -195,7 +196,6 @@ class _MapViewPageState extends State<MapViewPage>
                         shape: BoxShape.circle,
                       ),
                       child: Image.asset(
-                        
                         "assets/icons/sist_logo.png",
                         fit: BoxFit.contain,
                       ),

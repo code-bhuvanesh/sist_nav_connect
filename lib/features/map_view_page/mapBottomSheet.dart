@@ -4,11 +4,12 @@ import 'package:sist_nav_connect/utils/helpers.dart';
 import '../../utils/widgets/rectagle.dart';
 
 class MapBottomSheet extends StatefulWidget {
-  final double? busDistance;
   const MapBottomSheet({
     super.key,
     this.busDistance,
   });
+
+  final double? busDistance;
 
   @override
   State<MapBottomSheet> createState() => _MapBottomSheetState();
@@ -16,11 +17,6 @@ class MapBottomSheet extends StatefulWidget {
 
 class _MapBottomSheetState extends State<MapBottomSheet> {
   var sheetheight = 180.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return bottomSheet(context);
-  }
 
   Container bottomSheet(BuildContext context) {
     return Container(
@@ -48,62 +44,63 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
           ),
           if (widget.busDistance != null)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Bus no 26",
-                      style: TextStyle(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 15,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Bus no 26",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                    width: double.infinity,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: convertMeters(widget.busDistance!),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
-                        fontSize: 28,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text: convertMeters(widget.busDistance!),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: const [
-                          TextSpan(
-                            text: ' away',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                            ),
+                      children: const [
+                        TextSpan(
+                          text: ' away',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
                           ),
-                        ],
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text: "will arrive in ",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal,
                         ),
-                        children: [
-                          TextSpan(
-                            text: convertMetersTime(widget.busDistance!),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: "will arrive in ",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: convertMetersTime(widget.busDistance!),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
         ],
@@ -168,5 +165,10 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return bottomSheet(context);
   }
 }

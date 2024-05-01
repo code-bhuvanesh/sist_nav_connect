@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   PageRouteBuilder _pageTransition({required Widget child}) {
+    //this is just a dummy transition function so onGenerateRoute works
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -92,13 +93,12 @@ class MyApp extends StatelessWidget {
   Future<void> changeRefreshrate() async {
     try {
       var modes = await FlutterDisplayMode.supported;
-      print("display modes");
-      print(modes);
-      print("active dispaly mode");
-      print(await FlutterDisplayMode.active);
+      // print("display modes");
+      // print(modes);
+      // print("active dispaly mode");
       await FlutterDisplayMode.setPreferredMode(modes[1]);
-      print("new active dispaly mode");
-      print(await FlutterDisplayMode.active);
+      // print("new active dispaly mode");
+      await FlutterDisplayMode.active;
     } on PlatformException catch (e) {
       print(e);
     }
