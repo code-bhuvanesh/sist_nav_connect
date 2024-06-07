@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import '../../utils/constants.dart';
 
 class BackendApi {
   // final _serverurl = "http://192.168.29.180:8000/";
@@ -8,13 +9,16 @@ class BackendApi {
   //     "https://congenial-adventure-v7ww59w77r4fpvwg-8000.app.github.dev/";
   // final _serverurl =
   //     "https://upgraded-yodel-9g4qq9grp9pf747q-8000.app.github.dev/";
-  String? _serverurl;
+  // String? _serverurl;
+  String? _serverurl =
+      "https://$baseurl/";
   final _getBustApi = "api/busdetails/";
 
   var client = http.Client();
 
   Future<List<Map<String, dynamic>>> getBuses() async {
     var exc = true;
+
     if (_serverurl == null) {
       try {
         var result = await client.get(

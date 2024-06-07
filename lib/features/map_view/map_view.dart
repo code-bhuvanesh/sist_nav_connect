@@ -39,6 +39,7 @@ class _MapViewState extends State<MapView> {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          // urlTemplate: 'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=7mohzoiadIawWMBoamrR',
           userAgentPackageName: 'com.example.app',
         ),
         PolylineLayer(polylines: widget.polylines),

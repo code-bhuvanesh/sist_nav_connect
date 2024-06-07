@@ -2,13 +2,16 @@ import 'dart:convert';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
+import '../../utils/constants.dart';
 
 class LocationSocket {
   // var wsUrl = "ws://192.168.29.180:8000/ws/buslocation/";
   // var wsUrl =
   //     "ws://congenial-adventure-v7ww59w77r4fpvwg-8000.app.github.dev/ws/buslocation/";
-  String? wsUrl;
-  int? busid;
+  // String? wsUrl;
+  // int? busid;
+  String? wsUrl = "ws://$baseurl/ws/buslocation/";
+  int? busid = 2;
 
   late WebSocketChannel ws;
 
