@@ -24,7 +24,7 @@ class MapBloc extends Bloc<MapblocEvent, MapblocState> {
     Emitter<MapblocState> emit,
   ) async {
     var polylinepoints =
-        await openMapApi.getInbetweenPoints(pointsdouble: event.points);
+        await openMapApi.getInbetweenPoints(latLanPoints: event.points);
     emit(MapsPolyLineCordinates(points: polylinepoints));
   }
 

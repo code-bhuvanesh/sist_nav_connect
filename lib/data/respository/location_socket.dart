@@ -10,7 +10,7 @@ class LocationSocket {
   //     "ws://congenial-adventure-v7ww59w77r4fpvwg-8000.app.github.dev/ws/buslocation/";
   // String? wsUrl;
   // int? busid;
-  String? wsUrl = "ws://$baseurl/ws/buslocation/";
+  String? wsUrl = "$socketurl/ws/buslocation/";
   int? busid = 2;
 
   late WebSocketChannel ws;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -33,14 +35,28 @@ class _MapViewPageState extends State<MapViewPage>
 
   var zoomLevel = 17.0;
   LatLng? currentLocation;
+  bool isToCollege = true;
+  bool animateMap = true;
 
   @override
   void initState() {
     // context.read<MapBloc>().add(GetMapPolylinePoints(points: cordinates));
-    context.read<MainBloc>().add(GetCurrentLocation());
+
     context.read<MapBloc>().add(ListenBusLocationEvent(
           busId: widget.bus.busid,
         ));
+    context.read<MainBloc>().add(
+          GetCurrentLocation(),
+        );
+    // Timer.periodic(
+    //   const Duration(seconds: 5),
+    //   (Timer t) => context.read<MainBloc>().add(
+    //         GetCurrentLocation(),
+    //       ),
+    // );
+
+    isToCollege = DateTime.now().hour < 10;
+
     super.initState();
   }
 
@@ -55,7 +71,7 @@ class _MapViewPageState extends State<MapViewPage>
     return cord.map((e) {
       return Marker(
         child: Card(
-          color: Color.fromARGB(132, 255, 255, 255),
+          color: const Color.fromARGB(132, 255, 255, 255),
           child: Center(child: Text("${count++}")),
         ),
         point: e,
@@ -71,32 +87,39 @@ class _MapViewPageState extends State<MapViewPage>
           BlocListener<MainBloc, MainState>(
             listener: (context, state) {
               if (state is CurrentLocationState) {
-                print(state.location);
+                print("updated location : ${state.location}");
                 var loc = LatLng(
                   state.location.latitude,
                   state.location.longitude,
                 );
-                animatedMapMove(
-                  mapController: mapController,
-                  vsync: this,
-                  destLocation: loc,
-                  destZoom: zoomLevel,
-                );
+
                 setState(() {
                   // mapController.move(loc, 17);
                   currentLocation = loc;
                 });
+
+                if (animateMap) {
+                  animatedMapMove(
+                    mapController: mapController,
+                    vsync: this,
+                    destLocation: currentLocation!,
+                    destZoom: zoomLevel,
+                  );
+                  animateMap = false;
+                }
               }
             },
           ),
           BlocListener<MapBloc, MapblocState>(
             listener: (context, state) {
-              if (state is MapsPolyLineCordinates) {
+              if (state is MapsPolyLineCordinates && currentLocation != null) {
                 setState(() {
                   polyline = state.points;
                 });
-                var generatedPoints =
-                    findClosestLatLng(polyline, currentLocation!);
+                var generatedPoints = findClosestLatLng(
+                  polyline,
+                  currentLocation!,
+                );
                 closestPoint = generatedPoints.removeLast();
                 generatedPoints = findClosestLatLng(
                   generatedPoints,
@@ -121,6 +144,9 @@ class _MapViewPageState extends State<MapViewPage>
                   mapCordinates = ponamalle_cordinates
                       .map((e) => LatLng(e[1], e[0]))
                       .toList();
+                  if (!isToCollege) {
+                    mapCordinates = mapCordinates.reversed.toList();
+                  }
 
                   context.read<MapBloc>().add(
                         GetMapPolylinePoints(
@@ -141,11 +167,11 @@ class _MapViewPageState extends State<MapViewPage>
                         findClosestLatLng(generatedPoints, currentLocation!);
                     closestPoint = generatedPoints.removeLast();
                   }
-                  var busd = getDistanceFromList(polyline, end: closestPoint); //bus distance
+                  var busd = getDistanceFromList(polyline,
+                      end: closestPoint); //bus distance
                   setState(() {
                     polyline = generatedPoints;
-                    busDistance =busd;
-                        
+                    busDistance = busd;
                   });
                   print("my distance from bus $busDistance");
                 }
@@ -183,7 +209,7 @@ class _MapViewPageState extends State<MapViewPage>
                   ),
                 if (polyline.isNotEmpty)
                   Marker(
-                    point: polyline[polyline.length - 1],
+                    point: polyline.last,
                     // child: const Icon(
                     //   Icons.bus_alert_rounded,
                     // ),
@@ -195,10 +221,12 @@ class _MapViewPageState extends State<MapViewPage>
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
-                      child: Image.asset(
-                        "assets/icons/sist_logo.png",
-                        fit: BoxFit.contain,
-                      ),
+                      child: isToCollege
+                          ? Image.asset(
+                              "assets/icons/sist_logo.png",
+                              fit: BoxFit.contain,
+                            )
+                          : const Icon(Icons.home),
                     ),
                   ),
                 // ...testNumber(mapCordinates),
@@ -267,13 +295,14 @@ class _MapViewPageState extends State<MapViewPage>
                     fit: BoxFit.contain,
                   ),
                   onTap: () {
+                    // animateMap = true;
                     animatedMapMove(
                       mapController: mapController,
                       vsync: this,
                       destLocation: currentLocation!,
                       destZoom: zoomLevel,
                     );
-                    context.read<MainBloc>().add(GetCurrentLocation());
+                    // context.read<MainBloc>().add(GetCurrentLocation());
                   },
                 ),
                 const SizedBox(
@@ -334,10 +363,14 @@ class _MapViewPageState extends State<MapViewPage>
             });
 
             if (markersLatLng.length > 1) {
-              context.read<MapBloc>().add(GetMapPolylinePoints(
-                  points: markersLatLng
-                      .map((e) => [e.longitude, e.latitude])
-                      .toList()));
+              if (!isToCollege) markersLatLng = markersLatLng.reversed.toList();
+              context.read<MapBloc>().add(
+                    GetMapPolylinePoints(
+                      points: markersLatLng
+                          .map((e) => [e.longitude, e.latitude])
+                          .toList(),
+                    ),
+                  );
             } else {
               setState(() {
                 polyline = [];

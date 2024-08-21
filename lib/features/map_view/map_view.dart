@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'dart:math' as math;
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -38,8 +43,23 @@ class _MapViewState extends State<MapView> {
       ),
       children: [
         TileLayer(
+          additionalOptions: const {
+            'lat': "{lat}", // Placeholder for latitude
+            'lon': "{lon}", // Placeholder for longitude
+          },
+          // tileProvider: OlaMapTileProvider(),
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          // urlTemplate: 'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=7mohzoiadIawWMBoamrR',
+          // urlTemplate:
+          //     'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=7mohzoiadIawWMBoamrR',
+          // urlTemplate:
+          //     'https://api.olamaps.io/tiles/v1/styles/default-light-standard/static/{lon},{lat},{z}/800x600.png?api_key=TazIAv3R5Xuv1rwwiLCen7MN51yU4sZpQaMWzBoR',
+          tileUpdateTransformer:
+              StreamTransformer<TileUpdateEvent, TileUpdateEvent>(
+            (stream, cancelOnError) => stream.listen(
+              (tile) => print("tile event : ${tile.center}"),
+            ),
+          ),
+
           userAgentPackageName: 'com.example.app',
         ),
         PolylineLayer(polylines: widget.polylines),
@@ -72,5 +92,36 @@ class _MapViewState extends State<MapView> {
         ])
       ],
     );
+  }
+}
+
+class OlaMapTileProvider extends TileProvider {
+  @override
+  ImageProvider getImage(TileCoordinates coords, TileLayer options) {
+    final lat = tile2lat(coords.y.toInt(), coords.z.toInt());
+    final lon = tile2lon(coords.x.toInt(), coords.z.toInt());
+
+    // Create the URL using lat/lon instead of x/y/z
+    String url = options.urlTemplate!;
+    print("map cor : $lat $lon");
+    url = url.replaceAll('{lat}', lat.toString());
+    url = url.replaceAll('{lon}', lon.toString());
+    url = url.replaceAll('{z}', coords.z.toString());
+
+    // Return a NetworkImage as the ImageProvider
+    return NetworkImage(url);
+  }
+
+  double tile2lat(int y, int z) {
+    final n = math.pi - 2.0 * math.pi * y / math.pow(2.0, z);
+    return (180.0 / math.pi * math.atan(sinh(n)));
+  }
+
+  double tile2lon(int x, int z) {
+    return (x / math.pow(2.0, z) * 360.0 - 180.0);
+  }
+
+  double sinh(double x) {
+    return (math.exp(x) - math.exp(-x)) / 2;
   }
 }

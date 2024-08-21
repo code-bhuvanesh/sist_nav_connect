@@ -10,9 +10,8 @@ class BackendApi {
   // final _serverurl =
   //     "https://upgraded-yodel-9g4qq9grp9pf747q-8000.app.github.dev/";
   // String? _serverurl;
-  String? _serverurl =
-      "https://$baseurl/";
-  final _getBustApi = "api/busdetails/";
+  String? _serverurl = weburl;
+  final _getBustApi = "/api/busdetails/";
 
   var client = http.Client();
 

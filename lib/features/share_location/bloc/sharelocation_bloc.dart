@@ -29,7 +29,7 @@ class SharelocationBloc extends Bloc<SharelocationEvent, SharelocationState> {
     Emitter<SharelocationState> emit,
   ) async {
     var polylinepoints =
-        await openMapApi.getInbetweenPoints(pointsdouble: event.points);
+        await openMapApi.getInbetweenPoints(latLanPoints: event.points);
     emit(MapsPolyLineCordinates(points: polylinepoints));
   }
 

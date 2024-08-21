@@ -42,67 +42,76 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
             maxHeight: MediaQuery.of(context).size.height / 1.3,
             stopers: [sheetheight, 400, 800],
           ),
-          if (widget.busDistance != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 15,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Bus no 26",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),
+          (widget.busDistance != null)
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 15,
                   ),
-                  const SizedBox(
-                    height: 10,
-                    width: double.infinity,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: convertMeters(widget.busDistance!),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      children: const [
-                        TextSpan(
-                          text: ' away',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Bus no 26",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
                         ),
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: "will arrive in ",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.normal,
                       ),
-                      children: [
-                        TextSpan(
-                          text: convertMetersTime(widget.busDistance!),
+                      const SizedBox(
+                        height: 10,
+                        width: double.infinity,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: convertMeters(widget.busDistance!),
                           style: const TextStyle(
-                            fontSize: 20,
+                            color: Colors.black,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           ),
+                          children: const [
+                            TextSpan(
+                              text: ' away',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: "will arrive in ",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: convertMetersTime(widget.busDistance!),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(
+                  padding: const EdgeInsets.all(50),
+                  child: const Text(
+                    "Bus has not yet started",
+                    style: TextStyle(
+                      fontSize: 20,
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
         ],
       ),
     );
