@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sist_nav_connect/data/model/bus.dart';
 import 'package:sist_nav_connect/features/homepage/bloc/bus_bloc.dart';
 import 'package:sist_nav_connect/features/set_locaiton_page/set_location_page.dart';
+import 'package:sist_nav_connect/features/settings/settings_page.dart';
 import 'package:sist_nav_connect/features/share_location/share_location.dart';
 import 'package:sist_nav_connect/utils/helpers.dart';
 
@@ -24,9 +26,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void checkSharedPreferences() async {
+    var sharedPrefernces = await SharedPreferences.getInstance();
+    if (sharedPrefernces.getString("webUrl") == null) {
+      sharedPrefernces.setString("webUrl", "ws://98.130.15.185:8000");
+    }
+    if (sharedPrefernces.getString("httpUrl") == null) {
+      sharedPrefernces.setString("httpUrl", "http://98.130.15.185:8000");
+    }
+  }
+
   @override
   void initState() {
     CheckDefaultLocationSet();
+    checkSharedPreferences();
     context.read<BusBloc>().add(GetBusesEvent());
     super.initState();
   }
@@ -79,9 +92,16 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed(ShareLocation.routename);
+                                onTap: () async {
+                                  // Navigator.of(context)
+                                  //     .pushNamed(ShareLocation.routename);
+                                  await Navigator.of(context)
+                                      .pushNamed(SettingsPage.routename);
+                                  if (mounted) {
+                                    context
+                                        .read<BusBloc>()
+                                        .add(GetBusesEvent());
+                                  }
                                 },
                                 child: const Card(
                                   color: Color.fromARGB(255, 170, 190, 255),
@@ -101,10 +121,17 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    SetLocationPage.routename,
-                                  );
+                                onTap: () async {
+                                  // Navigator.of(context).pushNamed(
+                                  //   SetLocationPage.routename,
+                                  // );
+                                  await Navigator.of(context)
+                                      .pushNamed(SettingsPage.routename);
+                                  if (mounted) {
+                                    context
+                                        .read<BusBloc>()
+                                        .add(GetBusesEvent());
+                                  }
                                 },
                                 child: const Padding(
                                     padding: EdgeInsets.symmetric(

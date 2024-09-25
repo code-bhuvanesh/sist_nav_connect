@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sist_nav_connect/data/model/bus.dart';
+import 'package:sist_nav_connect/features/settings/bloc/settings_bloc.dart';
 
 import 'features/set_locaiton_page/bloc/set_location_bloc.dart';
 import 'features/set_locaiton_page/set_location_page.dart';
 import 'features/homepage/homepage.dart';
+import 'features/settings/settings_page.dart';
 import 'features/share_location/bloc/sharelocation_bloc.dart';
 import 'features/share_location/share_location.dart';
 import 'features/homepage/bloc/bus_bloc.dart';
@@ -14,12 +17,13 @@ import 'features/mainbloc/main_bloc.dart';
 import 'features/map_view_page/bloc/mapbloc_bloc.dart';
 import 'features/map_view_page/mapviewpage.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
   runApp(BlocProvider(
     create: (context) => MainBloc(),
     child: const MyApp(),
@@ -79,6 +83,13 @@ class MyApp extends StatelessWidget {
           child: BlocProvider(
             create: (context) => SetLocationBloc(),
             child: const SetLocationPage(),
+          ),
+        );
+      case SettingsPage.routename:
+        return _pageTransition(
+          child: BlocProvider(
+            create: (context) => SettingsBloc(),
+            child: const SettingsPage(),
           ),
         );
     }

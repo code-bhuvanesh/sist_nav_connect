@@ -1,6 +1,7 @@
-const baseurl = "probable-chainsaw-94wwxrw4xqr2p46v-8000.app.github.dev";
+// const baseurl = "probable-chainsaw-94wwxrw4xqr2p46v-8000.app.github.dev";
+const baseurl = "98.130.15.185:8000";
 // const baseurl = "192.168.0.202:8000/";
-const weburl = "https://$baseurl";
+const weburl = "http://$baseurl";
 const socketurl = "ws://$baseurl";
 
 const openMapApiKey =
